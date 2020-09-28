@@ -1,17 +1,18 @@
-function logName() {
-  console.log(this.name);
-} 
-
-const user = {
-  name: 'Ira',
-};
-
-const bindedFn = logName.bind(user);
-
-bindedFn();
-
-function bind(fn, context) {
-  return(...args) =>fn.bind(context, args);
+function bind(context, func, ...args) {
+  return function(...otherArgs) {
+      return func.apply(context, [...args, ...otherArgs]);
+  }
 }
 
-console.log(bind);
+function sum(a, b) {
+  this.value = a + b;
+  return this.value;
+}
+
+const accumulator = {
+  value: 0,
+}
+
+const addToTwo = bind(accumulator, sum, 2);
+
+console.log(addToTwo(5)); 
